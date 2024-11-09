@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Laptop Party - Interactive Pro Version</title>
+    <style>
+        /* Basic styles and animations for the heading */
+        h1 {
+            font-size: 80px;
+            color: aqua;
+            background-color: bisque;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            animation: slide-in 3s infinite alternate, bounce 1s infinite, rotate 2s linear infinite;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* Slide-in, Bounce, and Rotation animations */
+        @keyframes slide-in {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(100px); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(5deg); }
+        }
+
+        /* Pulsating border animation for video */
+        video {
+            width: 100%;
+            max-width: 300px;
+            display: block;
+            margin: 20px auto;
+            border: 5px solid aqua;
+            border-radius: 15px;
+            animation: border-pulse 2s infinite;
+            transition: transform 0.3s;
+        }
+
+        @keyframes border-pulse {
+            0% { border-color: aqua; }
+            50% { border-color: coral; }
+            100% { border-color: aqua; }
+        }
+
+        /* Scale-up effect on video hover */
+        video:hover { transform: scale(1.05); }
+
+        /* Background color and scrolling for body */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.5s;
+            height: 100vh;
+            overflow-y: auto; /* Allows scrolling */
+        }
+
+        /* Button styles with glow and scale effect */
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: coral;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px coral;
+        }
+
+        /* Theme Toggle Button */
+        #theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            border-radius: 50%;
+        }
+
+        /* Emoji Reaction Styling */
+        .emoji {
+            position: absolute;
+            font-size: 24px;
+            animation: float 2s ease-out forwards;
+        }
+
+        @keyframes float {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-150px); }
+        }
+    </style>
+</head>
+<body>
+    <h1 id="party-header">Party Time - New Laptop!</h1>
+    <div id="countdown">Countdown: <span id="timer">10 seconds</span></div>
+    
+    <!-- Text box and button for user interaction -->
+    <div>
+        <input type="text" id="user-input" placeholder="Type something..." />
+        <button class="button" onclick="replyThankYou()">Submit</button>
+        <p id="reply-message"></p>
+    </div>
+
+    <div>
+        <button class="button" onclick="toggleVideo()">Play/Pause Video</button>
+        <button class="button" onclick="changeColor()">Change Heading Color</button>
+        <button class="button" onclick="triggerConfetti()">Throw Confetti!</button>
+        <p id="loop-count">Animation Loops: 0</p>
+    </div>
+    <video id="party-video" src="B343AE76501626051E4BE5E714B361A1_video_dashinit.mp4" controls></video>
+    <div id="theme-toggle" onclick="toggleTheme()">🌙</div>
+
+    <script>
+        // Play sound effect
+        function playSound() {
+            const sound = new Audio("https://www.soundjay.com/button/beep-07.wav");
+            sound.play();
+        }
+
+        // Toggle video play/pause
+        function toggleVideo() {
+            const video = document.getElementById("party-video");
+            video.paused ? video.play() : video.pause();
+            playSound();
+        }
+
+        // Change the color of the heading randomly
+        function changeColor() {
+            const header = document.getElementById("party-header");
+            header.style.color = "#" + Math.floor(Math.random()*16777215).toString(16);
+            playSound();
+        }
+
+        // Toggle between light and dark themes
+        function toggleTheme() {
+            document.body.classList.toggle("dark-theme");
+            const icon = document.getElementById("theme-toggle");
+            icon.textContent = document.body.classList.contains("dark-theme") ? "🌞" : "🌙";
+        }
+
+        // Interactive confetti animation
+        function triggerConfetti() {
+            playSound();
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement("div");
+                confetti.classList.add("confetti");
+                confetti.style.position = "absolute";
+                confetti.style.width = "10px";
+                confetti.style.height = "10px";
+                confetti.style.backgroundColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+                confetti.style.top = Math.random() * 100 + "vh";
+                confetti.style.left = Math.random() * 100 + "vw";
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear infinite`;
+                document.body.appendChild(confetti);
+
+                // Remove confetti after animation
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Floating emoji reaction
+        const emojis = ["🎉", "✨", "🥳", "🎈", "🎊"];
+        document.getElementById("party-header").addEventListener("click", () => {
+            playSound();
+            const emoji = document.createElement("div");
+            emoji.className = "emoji";
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.left = Math.random() * 100 + "vw";
+            emoji.style.top = Math.random() * 80 + "vh";
+            document.body.appendChild(emoji);
+
+            // Remove emoji after animation
+            setTimeout(() => emoji.remove(), 2000);
+        });
+
+        // Background color change on click
+        document.body.addEventListener("click", (event) => {
+            if (!event.target.classList.contains("button")) { // Avoid triggering when clicking on buttons
+                document.body.style.backgroundColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+            }
+        });
+
+        // Reply function for user input
+        function replyThankYou() {
+            const input = document.getElementById("user-input").value;
+            if (input) {
+                document.getElementById("reply-message").textContent = "Thank you!";
+                playSound();
+            }
+        }
+    </script>
+</body>
+</html>
