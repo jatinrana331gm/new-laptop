@@ -105,77 +105,59 @@
             from { opacity: 1; transform: translateY(0); }
             to { opacity: 0; transform: translateY(-150px); }
         }
-
-        /* Style for form inputs and message */
-        #form-container {
-            margin: 20px;
-            text-align: center;
-        }
-        #user-input {
-            padding: 10px;
-            font-size: 16px;
-            width: 200px;
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
     <h1 id="party-header">Party Time - New Laptop!</h1>
-    <div id="countdown">Countdown: <span id="timer">10 seconds</span></div>
+    <div id="countdown"> <span id="timer"></span></div>
     
     <!-- Text box and button for user interaction -->
-    <div id="form-container">
-        <input type="text" id="user-input" placeholder="Type something..." />
-        <button class="button" onclick="sendEmail()">Submit</button>
-        <p id="reply-message"></p>
+    <div>
+        <form action="https://formspree.io/f/xvgplqyz" method="POST">
+            <label for="message"></label>
+            <textarea name="message" id="message" placeholder="Your Message" cols="10" rows="10" autocomplete="off" required></textarea>
+            <button type="submit" class="button" target="_blank">Send Message</button>
+        </form>
     </div>
 
     <div>
         <button class="button" onclick="toggleVideo()">Play/Pause Video</button>
         <button class="button" onclick="changeColor()">Change Heading Color</button>
         <button class="button" onclick="triggerConfetti()">Throw Confetti!</button>
-        <p id="loop-count">Animation Loops: 0</p>
+        <p id="loop-count"></p>
     </div>
     <video id="party-video" src="B343AE76501626051E4BE5E714B361A1_video_dashinit.mp4" controls></video>
     <div id="theme-toggle" onclick="toggleTheme()">🌙</div>
 
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
-
     <script>
-        // Initialize EmailJS
-        (function() {
-            emailjs.init('YOUR_USER_ID'); // Replace with your EmailJS user ID
-        })();
-
-        // Play sound effect
+        // Function to play sound effect
         function playSound() {
             const sound = new Audio("https://www.soundjay.com/button/beep-07.wav");
             sound.play();
         }
 
-        // Toggle video play/pause
+        // Function to toggle video play/pause
         function toggleVideo() {
             const video = document.getElementById("party-video");
             video.paused ? video.play() : video.pause();
             playSound();
         }
 
-        // Change the color of the heading randomly
+        // Function to change the color of the heading randomly
         function changeColor() {
             const header = document.getElementById("party-header");
             header.style.color = "#" + Math.floor(Math.random()*16777215).toString(16);
             playSound();
         }
 
-        // Toggle between light and dark themes
+        // Function to toggle between light and dark themes
         function toggleTheme() {
             document.body.classList.toggle("dark-theme");
             const icon = document.getElementById("theme-toggle");
             icon.textContent = document.body.classList.contains("dark-theme") ? "🌞" : "🌙";
         }
 
-        // Interactive confetti animation
+        // Function for interactive confetti animation
         function triggerConfetti() {
             playSound();
             for (let i = 0; i < 50; i++) {
@@ -195,7 +177,7 @@
             }
         }
 
-        // Floating emoji reaction
+        // Function for floating emoji reaction
         const emojis = ["🎉", "✨", "🥳", "🎈", "🎊"];
         document.getElementById("party-header").addEventListener("click", () => {
             playSound();
@@ -210,34 +192,12 @@
             setTimeout(() => emoji.remove(), 2000);
         });
 
-        // Background color change on click
+        // Function to change background color on click
         document.body.addEventListener("click", (event) => {
             if (!event.target.classList.contains("button")) { // Avoid triggering when clicking on buttons
                 document.body.style.backgroundColor = "#" + Math.floor(Math.random()*16777215).toString(16);
             }
         });
-
-        // Send email using EmailJS
-        function sendEmail() {
-            const userMessage = document.getElementById("user-input").value;
-
-            if (userMessage) {
-                const params = {
-                    user_message: userMessage,
-                    reply_message: "Thank you for your message!",
-                };
-
-                emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', params)
-                    .then(function(response) {
-                        document.getElementById("reply-message").textContent = "Thank you!";
-                        playSound();
-                        console.log('SUCCESS!', response);
-                    }, function(error) {
-                        document.getElementById("reply-message").textContent = "Oops! Something went wrong.";
-                        console.log('FAILED...', error);
-                    });
-            }
-        }
     </script>
 </body>
 </html>
