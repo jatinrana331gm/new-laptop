@@ -105,6 +105,18 @@
             from { opacity: 1; transform: translateY(0); }
             to { opacity: 0; transform: translateY(-150px); }
         }
+
+        /* Style for form inputs and message */
+        #form-container {
+            margin: 20px;
+            text-align: center;
+        }
+        #user-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -112,9 +124,9 @@
     <div id="countdown">Countdown: <span id="timer">10 seconds</span></div>
     
     <!-- Text box and button for user interaction -->
-    <div>
+    <div id="form-container">
         <input type="text" id="user-input" placeholder="Type something..." />
-        <button class="button" onclick="replyThankYou()">Submit</button>
+        <button class="button" onclick="sendEmail()">Submit</button>
         <p id="reply-message"></p>
     </div>
 
@@ -127,7 +139,15 @@
     <video id="party-video" src="B343AE76501626051E4BE5E714B361A1_video_dashinit.mp4" controls></video>
     <div id="theme-toggle" onclick="toggleTheme()">🌙</div>
 
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
     <script>
+        // Initialize EmailJS
+        (function() {
+            emailjs.init('YOUR_USER_ID'); // Replace with your EmailJS user ID
+        })();
+
         // Play sound effect
         function playSound() {
             const sound = new Audio("https://www.soundjay.com/button/beep-07.wav");
@@ -197,12 +217,25 @@
             }
         });
 
-        // Reply function for user input
-        function replyThankYou() {
-            const input = document.getElementById("user-input").value;
-            if (input) {
-                document.getElementById("reply-message").textContent = "Thank you!";
-                playSound();
+        // Send email using EmailJS
+        function sendEmail() {
+            const userMessage = document.getElementById("user-input").value;
+
+            if (userMessage) {
+                const params = {
+                    user_message: userMessage,
+                    reply_message: "Thank you for your message!",
+                };
+
+                emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', params)
+                    .then(function(response) {
+                        document.getElementById("reply-message").textContent = "Thank you!";
+                        playSound();
+                        console.log('SUCCESS!', response);
+                    }, function(error) {
+                        document.getElementById("reply-message").textContent = "Oops! Something went wrong.";
+                        console.log('FAILED...', error);
+                    });
             }
         }
     </script>
